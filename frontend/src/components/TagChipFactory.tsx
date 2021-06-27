@@ -18,7 +18,7 @@ const TagChip: React.FC<TagChipProps> = ({ tag, backgroundColor }) => {
         }
     })()
     return (
-        <Chip label={tag} className={styles.root} />
+        <Chip label={tag} size="small" className={styles.root} />
     )
 }
 
@@ -41,7 +41,7 @@ class TagChipFactory {
         const RBGArray = this.colorHash.rgb(tag)
         const RGBString = this.toRGBString(RBGArray, colorThreshold)
         return (
-            <TagChip tag={tag} backgroundColor={RGBString} />
+            <TagChip key={tag} tag={tag} backgroundColor={RGBString} />
         )
     }
 }
