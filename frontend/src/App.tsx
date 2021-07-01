@@ -102,8 +102,21 @@ const useStyles = makeStyles(theme => ({
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
-    height: '100vh',
     overflow: 'auto',
+    height: '100vh',
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    marginLeft: -drawerWidth,
+  },
+  contentShift: {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: 0,
   },
   container: {
     paddingTop: theme.spacing(4),
@@ -204,7 +217,7 @@ export const App: React.FC<RouteComponentProps<any>> = ({ history }) => {
         <Divider />
         <DrawerCollectionList store={store} />
       </Drawer>
-      <main className={classes.content}>
+      <main className={clsx(classes.content, open && classes.contentShift)}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
