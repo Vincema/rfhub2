@@ -11,6 +11,7 @@ class SearchParams:
     DEFAULT = (WILDCARD, None, True, False)
 
     def __init__(self, pattern: str = WILDCARD) -> None:
+        result: Tuple[str, Optional[str], bool, bool]
         if not pattern or pattern == WILDCARD:
             result = self.DEFAULT
         else:

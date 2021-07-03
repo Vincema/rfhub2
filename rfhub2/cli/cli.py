@@ -90,6 +90,7 @@ def main(
     """Package to populate rfhub2 with robot framework keywords
        from libraries and resource files."""
     client = Client(app_url, user, password)
+    rfhub_importer: Union[KeywordsImporter, StatisticsImporter]
     if mode == "keywords":
         rfhub_importer = KeywordsImporter(
             client, paths, no_installed_keywords, load_mode, include, exclude

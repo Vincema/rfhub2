@@ -54,9 +54,9 @@ class KeywordsExtractor:
         """
         libraries_paths = set()
         for path in self.paths:
-            path = self.get_library_path_from_name(path)
-            if path:
-                libraries_paths.update(self._traverse_paths(Path(path)))
+            new_libpath = self.get_library_path_from_name(path)
+            if new_libpath is not None:
+                libraries_paths.update(self._traverse_paths(Path(new_libpath)))
         if not self.no_installed_keywords:
             libdir = Path(robot.libraries.__file__).parent
             libraries_paths.update(self._traverse_paths(Path(libdir)))
@@ -70,13 +70,17 @@ class KeywordsExtractor:
         if Path(path).exists():
             return str(path)
         elif isinstance(path, str):
-            try:
-                return find_spec(path).submodule_search_locations[0]
-            except AttributeError as e:
+            modspec = find_spec(path)
+            if modspec is None:
                 print(
                     f"Collection {path} was neither valid path nor valid module name."
                 )
                 return None
+            submod_search_loc = modspec.submodule_search_locations
+            if submod_search_loc is None or not submod_search_loc:
+                return None
+            return submod_search_loc[0]
+        return None
 
     def _traverse_paths(self, path: Path) -> Set[Path]:
         """

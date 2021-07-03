@@ -1,6 +1,6 @@
 from pathlib import Path
 from progress.bar import IncrementalBar
-from typing import List, Set, Tuple
+from typing import List, Set, Tuple, Union
 
 from rfhub2.cli.api_client import Client
 from .statistics_extractor import StatisticsExtractor
@@ -8,7 +8,7 @@ from rfhub2.model import KeywordStatistics, KeywordStatisticsList
 
 
 class StatisticsImporter:
-    def __init__(self, client: Client, paths: Tuple[Path, ...]) -> None:
+    def __init__(self, client: Client, paths: Tuple[Union[Path, str], ...]) -> None:
         self.client = client
         self.paths = paths
 
@@ -33,7 +33,7 @@ class StatisticsImporter:
             suffix="%(percent).1f%% - %(eta)ds, elapsed: %(elapsed)ds",
         )
         for execution_file in execution_files:
-            statistics = StatisticsExtractor(execution_file).compute_statistics()
+            statistics = StatisticsExtractor(str(execution_file)).compute_statistics()
             loaded_statistics.append(self.add_statistics(statistics, execution_file))
             progress_bar.next()
         return (

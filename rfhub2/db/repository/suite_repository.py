@@ -107,8 +107,7 @@ class SuiteRepository(BaseRepository):
 
     def get(self, item_id: int) -> Optional[ModelSuite]:
         result = self._items.filter(Suite.id == item_id).first()
-        if result:
-            return self.from_row(result)
+        return self.from_row(result) if result else None
 
     def get_all(
         self,

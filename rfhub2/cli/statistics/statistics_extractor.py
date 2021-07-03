@@ -2,7 +2,7 @@ from collections import Counter
 from dataclasses import dataclass
 from datetime import datetime
 from itertools import groupby
-from typing import Callable, Dict, Iterable, List, Tuple
+from typing import Callable, Dict, Iterable, List, Tuple, cast
 from xml.etree.ElementTree import Element, parse
 
 from rfhub2.model import KeywordStatistics
@@ -89,12 +89,13 @@ class StatisticsExtractor:
         xml_keywords = parse(self.path).findall(".//kw")
         return [
             XmlKeyword(
-                xml_keyword.attrib.get("library"),
-                xml_keyword.attrib.get("name"),
+                cast(str, xml_keyword.attrib.get("library")),
+                cast(str, xml_keyword.attrib.get("name")),
                 self.calc_elapsed(xml_keyword),
             )
             for xml_keyword in xml_keywords
             if xml_keyword.attrib.get("library") is not None
+            and xml_keyword.attrib.get("name") is not None
         ]
 
     def datetime_from_attribute_agg(
@@ -102,7 +103,9 @@ class StatisticsExtractor:
     ) -> datetime:
         return datetime.strptime(
             agg_func(
-                tag.attrib.get(attr) for tag in element.iter() if tag.tag == "status"
+                cast(str, tag.attrib.get(attr))
+                for tag in element.iter()
+                if tag.tag == "status"
             ),
             self.source_time_format,
         )
@@ -122,7 +125,7 @@ class StatisticsExtractor:
         """
         return datetime.strftime(
             datetime.strptime(
-                parse(self.path).getroot().attrib.get("generated"),
+                cast(str, parse(self.path).getroot().attrib.get("generated")),
                 self.source_time_format,
             ),
             self.destination_time_format,

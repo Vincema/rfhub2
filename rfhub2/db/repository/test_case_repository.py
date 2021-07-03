@@ -60,8 +60,7 @@ class TestCaseRepository(IdEntityRepository):
 
     def get(self, item_id: int) -> Optional[ModelTestCase]:
         row = self._get_items.filter(self._id_filter(item_id)).first()
-        if row:
-            return self.from_row(row)
+        return self.from_row(row) if row else None
 
     def get_all(
         self,

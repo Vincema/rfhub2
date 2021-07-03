@@ -151,8 +151,7 @@ class KeywordRepository(IdEntityRepository):
 
     def get_with_stats(self, item_id: int) -> Optional[KeywordWithStats]:
         result = self._items_with_stats.filter(self._id_filter(item_id)).first()
-        if result:
-            return self.from_stats_row(result)
+        return self.from_stats_row(result) if result else None
 
     def update(self, item: Keyword, update_data: dict) -> Keyword:
         if "tags" in update_data:

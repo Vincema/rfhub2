@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Dict, List, Set, Tuple, Union
+from typing import Any, Dict, List, Set, Tuple, Union
 
 from rfhub2.cli.api_client import Client
 from rfhub2.cli.keywords.keywords_extractor import (
@@ -135,7 +135,7 @@ class KeywordsImporter:
 
     def add_collections(
         self, collections: List[CollectionUpdateWithKeywords]
-    ) -> List[Dict[str, int]]:
+    ) -> List[Dict[str, Any]]:
         """
         Adds collections and keywords from provided list to app.
         :param collections: List of collections object
@@ -243,7 +243,10 @@ class KeywordsImporter:
     def _library_or_resource_changed(
         new_collection: CollectionUpdateWithKeywords, existing_collection: Collection
     ) -> bool:
-        if new_collection.collection.type.lower() == "library":
+        if (
+            new_collection.collection.type
+            and new_collection.collection.type.lower() == "library"
+        ):
             return new_collection.collection.version != existing_collection.version
         else:
             return (

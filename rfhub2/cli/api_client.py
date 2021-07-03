@@ -1,6 +1,8 @@
 from requests import session, Response
 from typing import Dict, Tuple
 
+from requests.models import CaseInsensitiveDict
+
 from rfhub2.model import CollectionUpdate, KeywordCreate, KeywordStatisticsList
 
 
@@ -27,10 +29,9 @@ class Client(object):
         self.session = session()
         self.api_url = f"{self.app_url}/{API_V1}"
         self.session.auth = (user, password)
-        self.session.headers = {
-            "Content-Type": "application/json",
-            "accept": "application/json",
-        }
+        self.session.headers = CaseInsensitiveDict(
+            {"Content-Type": "application/json", "accept": "application/json"}
+        )
 
     def get_collections(self, skip: int = 0, limit: int = 100) -> Dict:
         """
